@@ -60,19 +60,13 @@ int strrlen(const char* str)
   return length;
 }
 
-void strcpy(char dest[], const char source[]) {
-    int i = 0;
-    while (1)
+char *strcpy(char *dest, const char *src)
+{
+    do
     {
-        dest[i] = source[i];
-
-        if (dest[i] == '\0')
-        {
-            break;
-        }
-
-        i++;
+      *dest++ = *src++;
     }
+    while (*src != 0);
 }
 
 void itoa(int num, char *number)
@@ -105,4 +99,17 @@ int atoi(char* s)
     i--;
   }
   return num;
+}
+
+int strncmp(char *s1, char *s2, uint8_t n){
+    while(n && *s1 && (*s1 == *s2)){
+        s1++;
+        s2++;
+        n--;
+    }
+    if(n==0){
+        return 0;
+    }else{
+        return 1;
+    }
 }

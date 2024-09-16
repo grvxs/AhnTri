@@ -2,83 +2,97 @@
 
 void newmain(){
 	char capps = KEY_A;
-	gotoxy(25, 0);
-	os_print_color("AhnTri Applications Execute Menu\n", WHITE, BLACK);
-	printf("  ");
-	os_print_color("Choose an application to continue...                                        \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[a] AhnTri Terminal Interface                                               \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[b] AhnTri C Calulator                                                      \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[c] AhnTri Memory Set                                                       \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[d] AhnTri Memory Print                                                     \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[e] CPU ID                                                                  \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[f] AhnTroid AI Assistant                                                   \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[g] AhnTri Notetaker                                                        \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[h] AhnTri Apps(NumDOS/GeX) menu                                            \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[i] AhnTri Timer                                                            \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("[j] Halt the CPU(Shutdown)                                                  \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("                                                                            \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	os_print_color("Copyright 2021 Jihwan Ahn                                                   \n", BLACK, CYAN);
-	printf(" ");
-	os_color_char(178, GREY, BLACK);
-	#include "nd.h"
-	ndraw();
+	printf("AhnTri Applications Execute Menu\n");
+	printf("Choose an application to continue...\n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[a] AhnTri Terminal Interface\n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[b] AhnTri C Calulator\n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[c] AhnTri Memory Set \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[d] AhnTri Memory Print      \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[e] CPU ID     \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[f] AhnTroid AI Assistant    \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[g] AhnTri Notetaker  \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[h] AhnTri Apps(NumDOS/GeX) menu    \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[i] AhnTri Timer      \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("[j] Halt the CPU(Shutdown)\n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf(" \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("Copyright 2021 Jihwan Ahn    \n");
+	framebuffer_putchar(178, 0x8f8f8f);
+	printf("\n\n");
+	framebuffer_putchar(219, 0x000000);
+	framebuffer_putchar(219, 0x013571);
+	framebuffer_putchar(219, 0x0e9f68);
+	framebuffer_putchar(219, 0x7fa49d);
+	framebuffer_putchar(219, 0xf70f0f);
+	framebuffer_putchar(219, 0x741b47);
+	framebuffer_putchar(219, 0x8d6b00);
+	framebuffer_putchar(219, 0x999999);
+	framebuffer_putchar(219, 0x8f8f8f);
+	framebuffer_putchar(219, 0x65abe7);
+	framebuffer_putchar(219, 0xa3bd8d);
+	framebuffer_putchar(219, 0x55ffff);
+	framebuffer_putchar(219, 0xe61e2b);
+	framebuffer_putchar(219, 0xba9da2);
+	framebuffer_putchar(219, 0xeaa442);
+	framebuffer_putchar(219, 0xffffff);
+	printf("\n");
+	framebuffer_putchar(219, 0x8a2be2);
+	framebuffer_putchar(219, 0x8a2be2);
+	framebuffer_putchar(219, 0xfcfdbd);
+	framebuffer_putchar(219, 0xfcfdbd);
+	framebuffer_putchar(219, 0x4a771f);
+	framebuffer_putchar(219, 0x4a771f);
+	framebuffer_putchar(219, 0x2b0303);
+	framebuffer_putchar(219, 0x2b0303);
+	framebuffer_putchar(219, 0x84442f);
+	framebuffer_putchar(219, 0x84442f);
+	framebuffer_putchar(219, 0x3b008a);
+	framebuffer_putchar(219, 0x3b008a);
+	framebuffer_putchar(219, 0x9cbbd7);
+	framebuffer_putchar(219, 0x9cbbd7);
+	framebuffer_putchar(219, 0x5555ff);
+	framebuffer_putchar(219, 0x5555ff);
 	capps = get_input_keycode();
 	if(capps == KEY_A){
-		clscr();
+		framebuffer_clscr();
 		kernmain();
 	} else if(capps == KEY_B){
-		clscr();
+		framebuffer_clscr();
 		ccalc();
 	} else if(capps == KEY_C){
-		clscr();
+		framebuffer_clscr();
 		memanset();
 	} else if(capps == KEY_D){
-		clscr();
+		framebuffer_clscr();
 		memprintf();
 	} else if(capps == KEY_E){
-		clscr();
+		framebuffer_clscr();
 		cputest();
 	} else if(capps == KEY_F){
-		clscr();
+		framebuffer_clscr();
 		ahntroid();
 	} else if(capps == KEY_G){
-		clscr();
+		framebuffer_clscr();
 		notes();
-	} else if(capps == KEY_H){
-		clscr();
-		homem();
 	} else if(capps == KEY_I){
-		clscr();
+		framebuffer_clscr();
 		timer();
 	} else if(capps == KEY_J){
-		clscr();
+		framebuffer_clscr();
 		shutdown();
 	} else{
-		clscr();
+		framebuffer_clscr();
 		newmain();
 	}
 }

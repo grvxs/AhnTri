@@ -1,36 +1,15 @@
 #include "../kernel.h"
 #include "../libc/atclib.h"
 
-//Catch @Whelk@ Game
-//I know this is all trash, but just...
 void game(){
-	char aa;
-	while(1){
-		aa = get_input_keycode();
-		if(aa==KEY_J){
-			printf("One @ caught");
-			break;
-		}else if(aa==KEY_U){
-			printf("One @ caught");
-			break;
-		}else if(aa==KEY_H){
-			printf("One @ caught");
-			break;
-		}else if(aa==KEY_F){
-			printf("One @ caught");
-			break;
-		}else if(aa==KEY_D){
-			printf("One @ caught");
-			break;
-		}else if(aa==KEY_W){
-			printf("One @ caught");
-			break;
-		}else if(aa==KEY_Z){
-			printf("One @ caught");
-			break;
-		}else{
-			printf("KILLED ALL");
-			break;
-		}
+	int i;
+	i = (int)xor32() % 10;
+	int ii;
+	printf("Guess a natural number in the set X(X={x|0<=x<=10}) ... ");
+	ii = read_int();
+	if(i == ii){
+		printf("The number picked is right!");
+	} else {
+		printf("Your guess is wrong...");
 	}
 }

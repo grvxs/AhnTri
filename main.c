@@ -13,65 +13,73 @@
 #include "kapps/timermode.h"
 #include "kapps/mem.h"
 #include "kinc/new.h"
-#include "kinc/homenu.h"
 #include "arch/i386/gdt.h"
 #include "arch/i386/irq.h"
 #include "lang/korean/romanized/kr.h"
 #include "lang/turk/romanized/tr.h"
-#include "lang/spanish/engsok/es.h"
+#include "lang/italian/italian.h"
+#include "boot/multiboot.h"
+#include "mm/pmm.h"
+#include "mm/mmap.h"
+#include "drivers/sound.h"
+#include "strtscrn.h"
+
+//Define Macros
+#define CHECK_FLAG(flags,bit)   ((flags) & (1 << (bit)))
 
 void display_menu()
 {
   printf(" ");
-  os_print_color("    Terminal - main menu  ", WHITE, GREY);
-  os_print_color("-", YELLOW, BLACK);
-  os_print_color("+", GREEN, BLACK);
-  os_print_color("x\n", RED, BLACK);
+  printf("    Terminal - main menu  ");
+  printf("-");
+  printf("+");
+  printf("x\n");
   printf(" ");
-  os_print_color("      AhnTri Terminal        \n", BLACK, WHITE);
-  os_color_char(178, GREY, BLACK);
-  os_print_color("  -~=-~=~--~=~--~=~--~=~-=-  \n", BLACK, WHITE);
-  os_color_char(178, GREY, BLACK);
-  os_print_color("   Type help for help or o   \n", BLACK, WHITE);
-  os_color_char(178, GREY, BLACK);
-  os_print_color("   ther key for each apps.   \n", BLACK, WHITE);
-  os_color_char(178, GREY, BLACK);
-  os_print_color("                             \n", BLACK, WHITE);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
-  os_color_char(178, GREY, BLACK);
+  printf("      AhnTri Terminal        \n");
+  framebuffer_putchar(178, 0x8f8f8f);
+  printf("  -~=-~=~--~=~--~=~--~=~-=-  \n");
+  framebuffer_putchar(178, 0x8f8f8f);
+  printf("   Type help for help or o   \n");
+  framebuffer_putchar(178, 0x8f8f8f);
+  printf("   ther key for each apps.   \n");
+  framebuffer_putchar(178, 0x8f8f8f);
+  printf("                             \n");
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
+  framebuffer_putchar(178, 0x8f8f8f);
 }
 
 void kernmain(){
+	framebuffer_clscr(0x000000);
 	char * choice;
 	display_menu();
 	while(1){
 		printf("\n\n@kern~");
-		print_char(30);
+		framebuffer_putchar(30, 0x7fa49d);
 		printf(" ");
 		choice = read_char();
 		if(strcmp(choice, "help")==0){
@@ -87,6 +95,7 @@ void kernmain(){
 			clscr();
 		} else if(strcmp(choice, "halt")==0 || strcmp(choice, "shutdown")==0 || strcmp(choice, "ashutdown")==0 || strcmp(choice, "ahalt")==0){
 			shutdown();
+			acpi_shutdown();
 		} else if(strcmp(choice, "cputest")==0 || strcmp(choice, "cpuid")==0 || strcmp(choice, "acpuid")==0){					//The real name of it was cpuid
 			cputest();
 		} else if(strcmp(choice, "notes")==0 || strcmp(choice, "anotes")==0){
@@ -96,8 +105,6 @@ void kernmain(){
 			pedx();
 		} else if(strcmp(choice, "atfork")==0 || strcmp(choice, "aatfork")==0){
 			fbomb();
-		} else if(strcmp(choice, "homenu")==0 || strcmp(choice, "ahomenu")==0){
-			homem();
 		} else if(strcmp(choice, "memor")==0 || strcmp(choice, "amemor")==0 || strcmp(choice, "memset")==0){
 			memanset();
 		} else if(strcmp(choice, "mp")==0 || strcmp(choice, "memprintf")==0){
@@ -110,6 +117,8 @@ void kernmain(){
 			plant();
 		} else if(strcmp(choice, "advset")==0){
 			advset();
+		} else if(strcmp(choice, "devtools")==0){
+			devtools();
 		} else if(strcmp(choice, "atroid")==0 || strcmp(choice, "ai")==0){
 			ahntroid();
 		} else if(strcmp(choice, "adic")==0 || strcmp(choice, "dict")==0){
@@ -124,6 +133,18 @@ void kernmain(){
 		}else if(strcmp(choice, "credit")==0 || strcmp(choice, "credits")==0){
 			clscr();
 			credits();
+		}else if(strcmp(choice, "kmap")==0 || strcmp(choice, "kmap kernel")==0){
+			clscr();
+			print_kernel_map();
+		}else if(strcmp(choice, "clibver")==0 || strcmp(choice, "atclibver")==0){
+			clscr();
+			clibver();
+		}else if(strcmp(choice, "ccalcgraph")==0 || strcmp(choice, "ccalcgraphplus")==0){
+			ccalcgraph();
+		}else if(strcmp(choice, "rsdpparse")==0){
+			searchforrsdp();
+		}else if(strcmp(choice, "covidhelp")==0){
+			covidhelperkapp();
 		}else{
 			printf("\n");
 			printf(choice);
@@ -132,68 +153,51 @@ void kernmain(){
 		}
 	}
 }
-
-void mkern_main()
+ 
+ //Welcome sound
+ void beep() {
+	play_sound(1000);
+	suspend(4);
+	play_sound(400);
+	suspend(2);
+	play_sound(740);
+	suspend(7);
+	play_sound(800);
+	suspend(5);
+	nosound();
+}
+ 
+void mkern_main(multiboot_info_t* multiboot)
 {
-  init_vga(CYAN, BLACK);
-  printf("\nVGA initialization");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(" [OK]\n");
-  suspend(2);
+  if (CHECK_FLAG (multiboot->flags, 12)){
+    suspend(1);
+    qemu_printf_string("Framebuffer flags(12) checked! \\/");
+  }
   init_gdt();
-  printf("\nGDT initialization");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(" [OK]\n");
-  suspend(2);
   init_idt();
   asm volatile("\tmov $12395, %eax");
   asm volatile("\tint $0");
-  printf("\nIDT initialization");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(" [OK]\n");
   irq_install();
-  printf("\nIRQ initialization");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(" [OK]\n");
+  extern uint8_t *_kernel_end;								//Defined in Linker.ld
+  uint32_t sizeofpmminit = multiboot->mem_upper + 1024;
+  pmm_init((uint32_t) &_kernel_end, sizeofpmminit);
+  pmm_init_availreg(multiboot->mmap_addr, multiboot->mmap_addr+multiboot->mmap_length);
+  pmm_kernel_deinit();
   qemu_printf_string("Everything is initialized. System is starting...");
-  printf("Loading main menu.");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(1);
-  printf(".");
-  suspend(2);
-  clscr();
-  init_vga(CYAN, BLACK);
-  #include "strtscrn.h"
+  init_tty(multiboot, 0x7fa49d, 0x000000);
+  print_int((int)sizeofpmminit);
+  printf(" pages initialized.\n");
+  suspend(4);
+  printf_mmap_addr(multiboot);
+  beep();
+  print_kernel_map();
+  printf("\nBoot loader: ");
+  printf((char*)multiboot->boot_loader_name);
+  searchforrsdp();
+  read_rtc();
+  suspend(20);
+  framebuffer_clscr(0x000000);
   strt_scrn();
-  clscr();
+  framebuffer_clscr(0x000000);
   newmain();
 }

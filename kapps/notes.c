@@ -5,6 +5,7 @@ void notetake()
 {
   char ch = 0;
   char inp = 0;
+  printf(" ");
   do{
     inp = get_input_keycode();
     if(inp == KEY_ENTER){
@@ -22,29 +23,29 @@ void notetake()
 
 void display_help()
 {
-  gotoxy(25, 0);
-  os_print_color("\n                           ", BLACK, BLACK);
-  os_print_color(" /-----------------------/ |", WHITE, BRIGHT_BLUE);
-  os_print_color("\n                           ", BLACK, BLACK);
-  os_print_color(" ------------------------| |", WHITE, BRIGHT_BLUE);
-  os_print_color("\n                           ", BLACK, BLACK);
-  os_print_color("|    AhnTri NoteTaker    | |", WHITE, BRIGHT_BLUE);
-  os_print_color("\n                           ", BLACK, BLACK);
-  os_print_color("|-~=-~=~--v1.3-~=~--~=~--| |", WHITE, BRIGHT_BLUE);
-  os_print_color("\n                           ", BLACK, BLACK);
-  os_print_color("| Take notes and do not  | |", WHITE, BRIGHT_BLUE);
-  os_print_color("\n                           ", BLACK, BLACK);
-  os_print_color("| shut down the PC then. | |", WHITE, BRIGHT_BLUE);
-  os_print_color("\n                           ", BLACK, BLACK);
-  os_print_color("-------------------------|/ ", WHITE, BRIGHT_BLUE);
+  framebuffer_clscr(0x000000);
+  framebuffer_putstr("\n                           ", 0x0e9f68);
+  framebuffer_putstr(" /-----------------------/ |", 0x0e9f68);
+  framebuffer_putstr("\n                           ", 0x0e9f68);
+  framebuffer_putstr(" ------------------------| |", 0x0e9f68);
+  framebuffer_putstr("\n                           ", 0x0e9f689);
+  framebuffer_putstr("|    AhnTri NoteTaker    | |", 0x0e9f68);
+  framebuffer_putstr("\n                           ", 0x0e9f68);
+  framebuffer_putstr("|-~=-~=~--v1.3-~=~--~=~--| |", 0x0e9f68);
+  framebuffer_putstr("\n                           ", 0x0e9f68);
+  framebuffer_putstr("| Take notes and do not  | |", 0x0e9f68);
+  framebuffer_putstr("\n                           ", 0x0e9f68);
+  framebuffer_putstr("| shut down the PC then. | |", 0x0e9f68);
+  framebuffer_putstr("\n                           ", 0x0e9f68);
+  framebuffer_putstr("-------------------------|/ ", 0x0e9f68);
 }
 
 void notes(){
 	display_help();
 	printf("\nStarting Notetaker");
 	suspend(100);
-	clscr();
-	os_print_color("\nWelcome to AhnTri NoteTaker.\n", BLACK, GREY);
+	framebuffer_clscr(0x000000);
+	framebuffer_putstr("\nWelcome to AhnTri NoteTaker.\n", 0xa3bd8d);
 	printf("Hint: press [Esc] or [Tab] to exit AhnTri NoteTaker\n================================================================================");
 	notetake();
 }

@@ -1,51 +1,6 @@
 #include "../../kernel.h"
 
 #define OS_suspend 16
-uint32 vga_index;
-uint16 cursor_pos = 0, cursor_next_line_index = 1;
-static uint32 next_line_index = 1;
-uint8 g_fg_color = GREEN, g_bg_color = BLACK;
-
-uint16 vga_entry(unsigned char ch, uint8 fg_color, uint8 bg_color) 
-{
-  uint16 ax = 0;
-  uint8 ah = 0, al = 0;
-
-  ah = bg_color;
-  ah <<= 4;
-  ah |= fg_color;
-  ax = ah;
-  ax <<= 8;
-  al = ch;
-  ax |= al;
-
-  return ax;
-}
-
-void clear_vga_buffer(uint16 **buffer, uint8 fg_color, uint8 bg_color)
-{
-	uint32 i;
-	for(i = 0; i < BUFSIZE; i++){
-		(*buffer)[i] = vga_entry(NULL, fg_color, bg_color);
-	}
-	next_line_index = 1;
-	vga_index = 0;
-}
-
-void clear_screen()
-{
-  clear_vga_buffer(&vga_buffer, g_fg_color, g_bg_color);
-  cursor_pos = 0;
-  cursor_next_line_index = 1;
-}
-
-void init_vga(uint8 fg_color, uint8 bg_color)
-{
-  vga_buffer = (uint16*)VGA_ADDRESS;
-  clear_vga_buffer(&vga_buffer, fg_color, bg_color);
-  g_fg_color = fg_color;
-  g_bg_color = bg_color;
-}
 
 uint8 inb(uint16 port)
 {
@@ -59,30 +14,16 @@ void outb(uint16 port, uint8 data)
   asm volatile("outb %0, %1" : : "a"(data), "Nd"(port));
 }
 
-void movcur(uint16 pos)
+uint16 inw(uint16 port)
 {
-  outb(0x3D4, 14);
-  outb(0x3D5, ((pos >> 8) & 0x00FF));
-  outb(0x3D4, 15);
-  outb(0x3D5, pos & 0x00FF);
+  uint16 data;
+  asm volatile("inw %1, %0" : "=a"(data) : "Nd"(port));
+  return data;
 }
 
-void movcur_next_line()
+void outw(uint16 port, uint16 data)
 {
-  cursor_pos = 80 * cursor_next_line_index;
-  cursor_next_line_index++;
-  movcur(cursor_pos);
-}
-
-void gotoxy(uint16 x, uint16 y)
-{
-  vga_index = 80*y;
-  vga_index += x;
-  if(y > 0){
-    cursor_pos = 80 * cursor_next_line_index * y;
-    cursor_next_line_index++;
-    movcur(cursor_pos);
-  }
+  asm volatile("outw %0, %1" : : "a"(data), "Nd"(port));
 }
 
 char get_input_keycode()
@@ -112,76 +53,8 @@ void suspend(uint32 timer_count)
 
 void print_new_line()
 {
-  if(next_line_index >= 55){
-    next_line_index = 0;
-    clear_vga_buffer(&vga_buffer, g_fg_color, g_bg_color);
-  }
-  vga_index = 80*next_line_index;
-  next_line_index++;
-  movcur_next_line();
+  printf("\n");
 }
-
-void print_char(char ch)
-{
-  vga_buffer[vga_index] = vga_entry(ch, g_fg_color, g_bg_color);
-  vga_index++;
-  movcur(++cursor_pos);
-}
-
-void print_char_notepad(char ch)
-{
-  vga_buffer[vga_index] = vga_entry(ch, g_fg_color, g_bg_color);
-  vga_index++;
-}
-
-void printf(char *str)
-{
-  uint32 index = 0;
-  while(str[index]){
-    if(str[index] == '\n'){
-      print_new_line();
-      index++;
-    }else{
-      print_char(str[index]);
-      index++;
-    }
-  }
-}
-
-void os_print_color(char *str, uint8 fore_color, uint8 back_color)
-{
-  uint32 index = 0;
-  uint8 fc, bc;
-  fc = g_fg_color;
-  bc = g_bg_color;
-  g_fg_color = fore_color;
-  g_bg_color = back_color;
-  while(str[index]){
-    if(str[index] == '\n'){
-      print_new_line();
-      index++;
-    }else{
-      print_char(str[index]);
-      index++;
-    }
-  }
-  g_fg_color = fc;
-  g_bg_color = bc;
-}
-
-void os_color_char(char ch, uint8 fore_color, uint8 back_color)
-{
-  uint32 index = 0;
-  uint8 fc, bc;
-  fc = g_fg_color;
-  bc = g_bg_color;
-  g_fg_color = fore_color;
-  g_bg_color = back_color;
-  print_char(ch);
-  g_fg_color = fc;
-  g_bg_color = bc;
-}
-
 
 void print_int(int num)
 {
@@ -260,6 +133,33 @@ int read_uint()
   }while(ch > 0);
 
   return atoui(data);
+}
+
+void printf_hex(uint32_t n)
+{
+    int tmp;
+    printf("0x");
+    char noZeroes = 1;
+    int i;
+    for (i = 28; i > 0; i -= 4){
+        tmp = (n >> i) & 0xF;
+        if (tmp == 0 && noZeroes != 0){
+            continue;
+        }
+        if (tmp >= 0xA){
+            noZeroes = 0;
+            framebuffer_putchar(tmp-0xA+'a' );
+        } else{
+            noZeroes = 0;
+            framebuffer_putchar( tmp+'0' );
+        }
+    }
+    tmp = n & 0xF;
+    if (tmp >= 0xA){
+        framebuffer_putchar(tmp-0xA+'a');
+    } else{
+        framebuffer_putchar(tmp+'0');
+    }
 }
 
 char getchar()

@@ -1,8 +1,17 @@
-#include "../libc/atclib.h"
+/*
+Copyright 2021 Jihwan Ahn
+
+The permissions to copy, modify, use privately, and distribute are granted without permission
+and limitations if Licence and Copyright information is noticed and the changes are noticed w
+hen modified. However, Commercial use is granted provided that one has got the copyrighter's p
+ermission. The use of trademarks 'CCALC' and 'CCALC for AhnTri' is prohibited without the copy
+righer's permission. Liability and Warranty, as with trademark use, are limited. 
+*/
+
 #include "../kernel.h"
 #include "../kinc/api.h"
 #include "advcalc.h"
-#define ccalsusp 10
+#define ccalsusp 16
 //Ccalc for include
 //Made in Xubuntu
 // Simple calculations
@@ -39,34 +48,25 @@ void quareq_ccalc(){
 
 void display_menu_ccalc()
 {
-  init_vga(WHITE, BLACK);
+  framebuffer_clscr(0xeaa442);
   gotoxy(25, 0);
+  printf("\n    Start - AhnTri CCalc      ");
+  printf("\n  [ Welcome to AhnTri Calc ]  ");
   printf("\n");
-  os_print_color("    Start - AhnTri CCalc      ", BLACK, GREY);
-  gotoxy(25, 0);
+  printf("  -~=-~=~--~=~--~=~--~=~--~=  ");
   printf("\n");
-  os_print_color("  [ Welcome to AhnTri Calc ]  ", BLACK, WHITE);
-  gotoxy(25, 0);
-  printf("\n");
-  os_print_color("  -~=-~=~--~=~--~=~--~=~--~=  ", BLACK, WHITE);
-  printf("\n");
-  os_print_color("For More, press [0] for help. ", BLACK, WHITE);
+  printf("For More, press [0] for help. ");
   suspend(20);
-  clscr();
+  framebuffer_clscr(0x2b0303);
 }
 
 void rtn(int* num1, int *num2)
 {
   printf("\nEnter first number");
   suspend(ccalsusp);
-  gotoxy(2, 2);
   *num1 = read_int();
-  gotoxy(0, 5);
-  printf("Enter second number");
+  printf("\nEnter second number");
   suspend(ccalsusp);
-  gotoxy(2, 2);
-  printf("[                         ] ");
-  gotoxy(2, 2);
   *num2 = read_int();
 }
 
@@ -111,21 +111,20 @@ void ccalc(){
 		switch(ccho){
 			case 0:
  			 	printf("\n");
-  				os_print_color("Addition:1, Sub:2, Mul:3, Div:4, Power 2:5, Power 3:6, sqrt: [10]", BLACK, WHITE);
-   			   printf("\n");
-  				os_print_color("For (a+b)^3,  [8], GeX [9], TUI [7], factorial [11], Advanced calc [12], for ax^2+bx+c [13], for x^y [14], for logab [15], and for Logical AND, OR, XOR respectively, [16], [17], [18]", BLACK, WHITE);
-   			   printf("\n");
+  				printf(" [1] Addition\n [2] Sub\n [3] Mul\n [4] Div\n [5] Power 2\n [6] Power 3\n [7] Return to kernel\n [8] Add and power 3\n [9] Not supported anymore\n [10] sqrt");
+   			   	printf("\n");
+  				printf(" [11] factorial\n [12] Advanced calc\n [13] for ax^2+bx+c\n [14] for x^y\n [15] for logab\n [16] Logical AND\n [17] OR\n [18] XOR\n");
+				printf(" [19] Sigma of A.P. \n [20] Limit of Exponential Funtion\n [21] Derivative of Quadratic Function f(x)=ax^2\n [22] Derivative of the function f(x)=x^n(f'(x) calculaton...)\n [23] f(x)=ax^2+bx+c, x that satisifies Rolle's theorem.\n [24] Integral of ax^n\n ");
+   			   	printf("\n");
 				break;
 			case 1:
 				printf("\nADDING 2 NUMERALS");
 				rtn(&num1, &num2);
-				gotoxy(2, 2);
 				adton(num1, num2);
 				break;
 			case 2:
 				printf("\nSUBTRACTING 2 NUMERALS");
 				rtn(&num1, &num2);
-				gotoxy(2, 2);
 				subton(num1, num2);
 				break;
 			case 3:
@@ -137,9 +136,8 @@ void ccalc(){
 			case 4:
 				rtn(&num1, &num2);
 				if(num2 == 0){
-					printf("Error : Divide by 0");
+					asm volatile("int $0");
 				}else{
-					printf("DIVIDING 2 NUMERALS");
 					gotoxy(2, 2);
 					print_int(num1 / num2);
 				}
@@ -159,7 +157,6 @@ void ccalc(){
 				print_int(powth(po1));
 				break;
 			case 7:
-				init_vga(CYAN, BLACK);
 				kernmain();
 				break;
 			case 8:
@@ -190,8 +187,7 @@ void ccalc(){
 				print_int(xpy(num1, num2));
 				break;
 			case 9:
-				homem();
-				break;
+				printf("Not supported anymore.");
 			case 15:
 				logf();		//Log b = x function
 				break;		//   a
@@ -213,12 +209,96 @@ void ccalc(){
 				rtn(&num1, &num2);
 				print_int(LOGICAL("xor", num1, num2));
 				break;
+			case 19:
+				printf("n\n");
+				print_char(228);
+				printf(" = {a+(n-1)d}\n");
+				printf("i=m\n");
+				printf("Your a: ");
+				num1 = read_int();
+				printf("Your d: ");
+				num2 = read_int();
+				printf("Your n: ");
+				po1 = read_int();
+				printf("Your m: ");
+				num3 = read_int();
+				print_int(soap(num1, num2, po1, num3));
+				break;
+			case 20:
+				printf("n\n");
+				printf("lim f(x)    f(x) = b^c");
+				printf(" \nx-->a\n");
+				printf("is your a ");
+				print_char(236);
+				printf("? 1 for yes, 2 for no");
+				num1 = read_int();
+				if(num1 == 1){
+					print_int(expfxlim(false, 1, 2, true));
+				}else if(num1 == 2){
+					printf("\nyour b: ");
+					num2 = read_int();
+					printf("\nyour c: ");
+					num3 = read_int();
+					print_int(expfxlim(true, num2, num3, false));
+				}
+				printf("\ninfinity will be printed as 1000000.");
+				break;
+			case 21:
+				printf("f(x)=ax^2, f'(x) x-->k\n");
+				printf("a? ");
+				num1 = read_int();
+				printf("\nk? ");
+				num2 = read_int();
+				print_int(devofqf(num1, num2));
+				break;
+			case 22:
+				printf("f(x)=x*n, f'(x)?\nYour value of x? ");
+				num1 = read_int();
+				printf("\nYour value of n? ");
+				num2 = read_int();
+				print_int(num2*xpy(num1, num2-1));
+				break;
+			case 23:
+				printf("f(x)=ax^2+bx+c, x that satisifies Rolle's theorem.\n");
+				printf("a: ");
+				num1 = read_int();
+				printf("\nb: ");
+				num2 = read_int();
+				printf("-");
+				print_int(num2/2/num1);
+				break;
+			case 24:
+				print_char(244);
+				framebuffer_back();
+				print_char(245);
+				printf("ax^n  dx\n");
+				printf("a: ");
+				num1 = read_int();
+				printf("\nn: ");
+				num2 = read_int();
+				print_int(num1);
+				printf("*1/");
+				print_int(num2+1);
+				printf("*x^");
+				print_int(num2+1);
+				break;
+			case 25:
+				printf("The surface of the area between a curve a(x-A)(x-B) and the x axis\n");
+				printf("a: ");
+				num1 = read_int();
+				printf("\nA(big): ");
+				num2 = read_int();
+				printf("\nB(small): ");
+				num3 = read_int();
+				printf("\n");
+				print_int(num1*powth(num2-num3)/6);		// |a(A-B)^3/6|
+				break;
 			default:
 				ccalc();
 				break;
 		}
 		printf("\n\nPress any key to reload screen...");
 		getchar();
-		clear_screen();
+		framebuffer_clscr(0x2b0303);
 	}
 }
